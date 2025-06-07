@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الإدارة - منصة التعدين السحابي</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-cog me-2"></i>
+                لوحة الإدارة
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">لوحة التحكم</a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-shield me-1"></i>
+                        <span id="adminUsername">مدير</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-2"></i>خروج
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Dashboard -->
+    <div class="container-fluid my-4">
+        <!-- Statistics Overview -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm h-100 admin-stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon bg-primary bg-opacity-10 rounded-circle mx-auto mb-3">
+                            <i class="fas fa-users text-primary fa-2x"></i>
+                        </div>
+                        <h3 class="fw-bold text-primary mb-1" id="totalUsers">0</h3>
+                        <p class="text-muted mb-0">إجمالي المستخدمين</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm h-100 admin-stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon bg-success bg-opacity-10 rounded-circle mx-auto mb-3">
+                            <i class="fas fa-file-contract text-success fa-2x"></i>
+                        </div>
+                        <h3 class="fw-bold text-success mb-1" id="activeContracts">0</h3>
+                        <p class="text-muted mb-0">العقود النشطة</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm h-100 admin-stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon bg-info bg-opacity-10 rounded-circle mx-auto mb-3">
+                            <i class="fas fa-coins text-info fa-2x"></i>
+                        </div>
+                        <h3 class="fw-bold text-info mb-1" id="totalDeposits">0</h3>
+                        <p class="text-muted mb-0">إجمالي الإيداعات (TRX)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 shadow-sm h-100 admin-stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon bg-warning bg-opacity-10 rounded-circle mx-auto mb-3">
+                            <i class="fas fa-clock text-warning fa-2x"></i>
+                        </div>
+                        <h3 class="fw-bold text-warning mb-1" id="pendingDeposits">0</h3>
+                        <p class="text-muted mb-0">إيداعات معلقة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Tabs -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+                <ul class="nav nav-tabs card-header-tabs" id="adminTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">
+                            <i class="fas fa-users me-2"></i>المستخدمين
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contracts-tab" data-bs-toggle="tab" data-bs-target="#contracts" type="button" role="tab">
+                            <i class="fas fa-file-contract me-2"></i>العقود
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="deposits-tab" data-bs-toggle="tab" data-bs-target="#deposits" type="button" role="tab">
+                            <i class="fas fa-wallet me-2"></i>الإيداعات
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions" type="button" role="tab">
+                            <i class="fas fa-exchange-alt me-2"></i>المعاملات
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
+                            <i class="fas fa-cog me-2"></i>الإعدادات
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="adminTabsContent">
+                    <!-- Users Tab -->
+                    <div class="tab-pane fade show active" id="users" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">إدارة المستخدمين</h5>
+                            <button class="btn btn-outline-primary" onclick="loadUsers()">
+                                <i class="fas fa-sync-alt"></i> تحديث
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>المعرف</th>
+                                        <th>اسم المستخدم</th>
+                                        <th>البريد الإلكتروني</th>
+                                        <th>الرصيد</th>
+                                        <th>إجمالي الأرباح</th>
+                                        <th>تاريخ التسجيل</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">جار التحميل...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Contracts Tab -->
+                    <div class="tab-pane fade" id="contracts" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">إدارة العقود</h5>
+                            <div>
+                                <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#createContractModal">
+                                    <i class="fas fa-plus"></i> إضافة عقد
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="loadContracts()">
+                                    <i class="fas fa-sync-alt"></i> تحديث
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row g-3" id="contractsContainer">
+                            <div class="col-12 text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">جار التحميل...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deposits Tab -->
+                    <div class="tab-pane fade" id="deposits" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">الإيداعات المعلقة</h5>
+                            <button class="btn btn-outline-primary" onclick="loadPendingDeposits()">
+                                <i class="fas fa-sync-alt"></i> تحديث
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>المعرف</th>
+                                        <th>المستخدم</th>
+                                        <th>المبلغ (TRX)</th>
+                                        <th>العنوان</th>
+                                        <th>التاريخ</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="depositsTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">جار التحميل...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Transactions Tab -->
+                    <div class="tab-pane fade" id="transactions" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">جميع المعاملات</h5>
+                            <button class="btn btn-outline-primary" onclick="loadAllTransactions()">
+                                <i class="fas fa-sync-alt"></i> تحديث
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>المعرف</th>
+                                        <th>المستخدم</th>
+                                        <th>النوع</th>
+                                        <th>المبلغ</th>
+                                        <th>الحالة</th>
+                                        <th>التاريخ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">جار التحميل...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="tab-pane fade" id="settings" role="tabpanel">
+                        <h5 class="mb-4">إعدادات النظام</h5>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h6 class="fw-bold mb-3">إعدادات الإيداع</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label">عنوان محفظة TRX</label>
+                                            <input type="text" class="form-control" id="trxAddress" readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">الحد الأدنى للإيداع (TRX)</label>
+                                            <input type="number" class="form-control" id="minDeposit" value="50">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">مكافأة الإحالة (TRX)</label>
+                                            <input type="number" class="form-control" id="referralBonus" value="10">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h6 class="fw-bold mb-3">إحصائيات عامة</h6>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-info" onclick="calculateProfits()">
+                                                <i class="fas fa-calculator me-2"></i>حساب الأرباح يدوياً
+                                            </button>
+                                            <button class="btn btn-warning" onclick="backupDatabase()">
+                                                <i class="fas fa-download me-2"></i>نسخ احتياطي للبيانات
+                                            </button>
+                                            <button class="btn btn-success" onclick="saveSettings()">
+                                                <i class="fas fa-save me-2"></i>حفظ الإعدادات
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Contract Modal -->
+    <div class="modal fade" id="createContractModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة عقد جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createContractForm">
+                        <div class="mb-3">
+                            <label for="contractName" class="form-label">اسم العقد</label>
+                            <input type="text" class="form-control" id="contractName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contractDescription" class="form-label">الوصف</label>
+                            <textarea class="form-control" id="contractDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="contractPrice" class="form-label">السعر (TRX)</label>
+                                <input type="number" class="form-control" id="contractPrice" min="1" step="0.01" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="contractReturn" class="form-label">العائد اليومي (%)</label>
+                                <input type="number" class="form-control" id="contractReturn" min="0.01" max="10" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="contractDuration" class="form-label">المدة (أيام)</label>
+                                <input type="number" class="form-control" id="contractDuration" min="1" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="contractMinDeposit" class="form-label">الحد الأدنى (TRX)</label>
+                                <input type="number" class="form-control" id="contractMinDeposit" min="1" value="50" required>
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-plus me-2"></i>إضافة العقد
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Balance Modal -->
+    <div class="modal fade" id="editBalanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل رصيد المستخدم</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editBalanceForm">
+                        <input type="hidden" id="editUserId">
+                        <div class="mb-3">
+                            <label class="form-label">اسم المستخدم</label>
+                            <input type="text" class="form-control" id="editUserName" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="balanceAmount" class="form-label">المبلغ (TRX)</label>
+                            <input type="number" class="form-control" id="balanceAmount" step="0.01" required>
+                            <div class="form-text">استخدم قيم موجبة للإضافة وسالبة للخصم</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="balanceDescription" class="form-label">الوصف</label>
+                            <input type="text" class="form-control" id="balanceDescription" placeholder="سبب التعديل" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>حفظ التعديل
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Deposit Modal -->
+    <div class="modal fade" id="confirmDepositModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تأكيد الإيداع</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="confirmDepositForm">
+                        <input type="hidden" id="confirmDepositId">
+                        <div class="mb-3">
+                            <label class="form-label">المستخدم</label>
+                            <input type="text" class="form-control" id="confirmUserName" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ (TRX)</label>
+                            <input type="text" class="form-control" id="confirmAmount" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmTxHash" class="form-label">رقم المعاملة</label>
+                            <input type="text" class="form-control" id="confirmTxHash" placeholder="أدخل رقم المعاملة" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check me-2"></i>تأكيد الإيداع
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+        <div id="alertToast" class="toast" role="alert">
+            <div class="toast-header">
+                <i class="fas fa-info-circle text-primary me-2"></i>
+                <strong class="me-auto">تنبيه</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+                <!-- Toast message will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/js/admin.js"></script>
+</body>
+</html>

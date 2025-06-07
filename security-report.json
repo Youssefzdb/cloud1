@@ -1,0 +1,74 @@
+{
+  "timestamp": "2025-05-27T00:59:42.166Z",
+  "checks": [
+    {
+      "name": "NPM Security",
+      "passed": true,
+      "details": "لا توجد ثغرات أمنية في التبعيات",
+      "points": 20
+    },
+    {
+      "name": "Helmet Security",
+      "passed": true,
+      "details": "helmet مُفعّل للحماية من هجمات XSS و CSRF",
+      "points": 15
+    },
+    {
+      "name": "CORS Configuration",
+      "passed": true,
+      "details": "CORS مُكوّن بشكل صحيح",
+      "points": 10
+    },
+    {
+      "name": "Rate Limiting",
+      "passed": true,
+      "details": "تحديد معدل الطلبات مُفعّل",
+      "points": 15
+    },
+    {
+      "name": "Data Encryption",
+      "passed": true,
+      "details": "تشفير البيانات الحساسة مُفعّل",
+      "points": 15
+    },
+    {
+      "name": "Session Security",
+      "passed": true,
+      "details": "جلسات آمنة مُكوّنة",
+      "points": 10
+    },
+    {
+      "name": "Node.js Version",
+      "passed": false,
+      "details": "إصدار Node.js غير محدد",
+      "points": 0
+    },
+    {
+      "name": "Environment Config",
+      "passed": false,
+      "details": "ملف التكوين البيئي مفقود",
+      "points": 0
+    },
+    {
+      "name": "Vercel Config",
+      "passed": true,
+      "details": "تكوين Vercel موجود",
+      "points": 5
+    },
+    {
+      "name": "Database File",
+      "passed": true,
+      "details": "قاعدة البيانات موجودة (حجم: 40.00 KB)",
+      "points": 10
+    },
+    {
+      "name": "Backup System",
+      "passed": true,
+      "details": "نظام النسخ الاحتياطي مُكوّن",
+      "points": 10
+    }
+  ],
+  "score": 110,
+  "maxScore": 120,
+  "status": "excellent"
+}

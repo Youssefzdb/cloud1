@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: cloud-mining-platform
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: TRX_WALLET_ADDRESS
+        value: TR2AQWkYfU29n2dh8LMPQL5WvZVSrPkzHa
+      - key: TELEGRAM_SUPPORT_URL
+        value: https://t.me/Chafcha_azizos
+    disk:
+      name: mining-platform-disk
+      mountPath: /opt/render/project/src
+      sizeGB: 1
